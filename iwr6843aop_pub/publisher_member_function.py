@@ -41,6 +41,8 @@ global data_port
 data_port = '/dev/ttyUSB1'
 global cli_port
 cli_port = '/dev/ttyUSB0'
+global frame_id
+frame_id = ''
 global got_args
 got_args = False
 username = os.path.expanduser('~')
@@ -299,14 +301,18 @@ class MinimalPublisher(Node):
         global cfg_path
         global data_port
         global cli_port
+        global frame_id
 
         self.declare_parameter('data_port', data_port)
         self.declare_parameter('cli_port', cli_port)
         self.declare_parameter('cfg_path', cfg_path)        
+        self.declare_parameter('frame_id', frame_id)        
+
 
         data_port = self.get_parameter('data_port').get_parameter_value().string_value
         cli_port = self.get_parameter('cli_port').get_parameter_value().string_value
         cfg_path = self.get_parameter('cfg_path').get_parameter_value().string_value
+        frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
 
         global got_args
         got_args = True
@@ -330,7 +336,7 @@ class MinimalPublisher(Node):
             pcl_msg = PointCloud2()
             pcl_msg.header = std_msgs.msg.Header()
             pcl_msg.header.stamp = self.get_clock().now().to_msg()
-            pcl_msg.header.frame_id = 'iwr6843_frame' ########################################
+            pcl_msg.header.frame_id = frame_id ########################################
             pcl_msg.height = 1 # because unordered cloud
             pcl_msg.width = cloud_arr.shape[0] # number of points in cloud
             # define interpretation of pointcloud message (offset is in bytes, float32 is 4 bytes)
